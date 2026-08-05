@@ -1,0 +1,11 @@
+services:
+  meshbridge:
+    build: .
+    container_name: meshbridge
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./mesh.ini:/app/mesh.ini:ro
+      - ./data:/app/data
+    environment:
+      - TZ=UTC
