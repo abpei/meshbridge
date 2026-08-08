@@ -5,9 +5,9 @@ LABEL maintainer="meshbridge" \
       description="MeshBridge — Meshtastic ↔ Telegram gateway" \
       version="0.1.0"
 
-# Install tini (PID 1 init) and curl for healthcheck
+# Install tini (PID 1 init) for signal handling
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends tini curl && \
+    apt-get install -y --no-install-recommends tini && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -18,8 +18,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy upstream application code and project files
 COPY upstream/ ./upstream/
-COPY mesh.ini ./
 COPY entrypoint.sh ./
+COPY mock-meshtastic.py ./upstream/
 
 # Create non-root user and data directory
 RUN groupadd -r meshbridge && \
@@ -29,6 +29,9 @@ RUN groupadd -r meshbridge && \
 
 USER meshbridge
 
+# Set working directory to upstream so `python mesh.py` works directly
+WORKDIR /app/upstream
+
 EXPOSE 5000
 
 # Health check: verify Flask webapp is responsive on port 5000
@@ -36,4 +39,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/')" || exit 1
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["./entrypoint.sh"]
+CMD ["/app/entrypoint.sh"]

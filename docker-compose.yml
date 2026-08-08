@@ -1,11 +1,59 @@
+# docker-compose.yml — MeshBridge service definition
+# Uses the project Dockerfile to build the bridge image,
+# connects to a dedicated Meshtastic network for inter-service communication,
+# and configures env_file, log rotation, and graceful shutdown.
+
 services:
-  meshbridge:
-    build: .
+  # ── MeshBridge ─────────────────────────────────────────────────────
+  bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: meshbridge:latest
     container_name: meshbridge
+    env_file: .env
     restart: unless-stopped
-    network_mode: host
+    stop_grace_period: 30s
+    ports:
+      - "5000:5000"           # Flask webapp
     volumes:
-      - ./mesh.ini:/app/mesh.ini:ro
-      - ./data:/app/data
-    environment:
-      - TZ=UTC
+      - bridge-data:/app/data    # Persistent data directory
+    networks:
+      - meshtastic-net
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ── Companion services (uncomment as needed) ──────────────────────
+
+  # mosquitto:
+  #   image: eclipse-mosquitto:2
+  #   container_name: mosquitto
+  #   restart: unless-stopped
+  #   ports:
+  #     - "1883:1883"
+  #   volumes:
+  #     - ./mosquitto/config:/mosquitto/config
+  #     - mosquitto-data:/mosquitto/data
+  #     - mosquitto-log:/mosquitto/log
+  #   networks:
+  #     - meshtastic-net
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+
+# ── Networks ──────────────────────────────────────────────────────────
+networks:
+  meshtastic-net:
+    driver: bridge
+    name: meshtastic-net
+
+# ── Volumes ───────────────────────────────────────────────────────────
+volumes:
+  bridge-data:
+#   mosquitto-data:
+#   mosquitto-log:

@@ -1,0 +1,245 @@
+# ============================================================================
+# MeshBridge — mesh.ini.example
+# ============================================================================
+# Copy this file to mesh.ini and edit to match your environment.
+#
+# Alternatively, set MESHB_* environment variables instead of editing this file.
+# The entrypoint.sh script renders mesh.ini from those variables at startup.
+#
+# Environment variable mapping:
+#   MESHB_<SECTION>_<KEY>  →  [Section] Key = value
+#   Single-word keys (DEFAULT): MESHB_DEBUG → [DEFAULT] Debug = true
+#
+# Example:
+#   MESHB_TELEGRAM_TOKEN=AA:BB:CC MESHB_MQTT_HOST=mqtt.example.com \
+#     MESHB_MESHTASTIC_DEVICE=tcp:192.168.1.100 ./entrypoint.sh
+# ============================================================================
+
+# ─── Global Defaults ───────────────────────────────────────────────────────────
+
+[DEFAULT]
+# Enable global debugging mode. When true, verbose logging is activated.
+# Env: MESHB_DEBUG
+Debug = false
+
+# Sentry.io DAP endpoint for application performance monitoring.
+# Env: MESHB_SENTRY_DSN
+SentryDSN = https://examplePublicKey@o0.ingest.sentry.io/0
+
+# Enable Sentry error tracking. Requires SentryDSN to be set.
+# Env: MESHB_SENTRY_ENABLED
+SentryEnabled = false
+
+# OpenWeatherMap API key for the /weather command.
+# Get one free at https://openweathermap.org/api
+# Leave empty to disable weather commands.
+# Env: MESHB_OPENWEATHER_KEY
+OpenWeatherKey = ""
+
+
+# ─── Telegram ──────────────────────────────────────────────────────────────────
+
+[Telegram]
+# Telegram bot token obtained from @BotFather.
+# Env: MESHB_TELEGRAM_TOKEN
+Token = YOUR_TELEGRAM_BOT_TOKEN
+
+# Telegram user ID with admin privileges. Positive integer.
+# Env: MESHB_TELEGRAM_ADMIN
+Admin = 123456789
+
+# Gateway room (chat) ID bridging Telegram ↔ Meshtastic. Negative integer.
+# Env: MESHB_TELEGRAM_ROOM
+Room = -1001234567890
+
+# Invite link for the gateway room (optional).
+# Env: MESHB_TELEGRAM_ROOM_LINK
+RoomLink = https://t.me/joinchat/XXXXXXXXXX
+
+# Send notifications when new Meshtastic nodes join the mesh.
+# Env: MESHB_TELEGRAM_NOTIFICATIONS_ENABLED
+NotificationsEnabled = false
+
+# Separate Telegram chat ID for new-node notifications (negative integer).
+# Env: MESHB_TELEGRAM_NOTIFICATIONS_ROOM
+NotificationsRoom = -1009876543210
+
+# Enable the /map command. When true, /map returns a clickable map link.
+# Env: MESHB_TELEGRAM_MAP_LINK_ENABLED
+MapLinkEnabled = false
+
+# Custom link for the /map command response.
+# Tokens: %%d = decimal node ID, %%s = hex node ID.
+# Env: MESHB_TELEGRAM_MAP_LINK
+MapLink = https://meshmap.net/#%%d
+
+# Include this gateway node in map data. Boolean.
+# Env: MESHB_TELEGRAM_NODE_INCLUDE_SELF
+NodeIncludeSelf = false
+
+# Whether the bot responds in group rooms. Boolean.
+# Env: MESHB_TELEGRAM_BOT_IN_ROOMS
+BotInRooms = true
+
+
+# ─── Web Application (Map UI) ──────────────────────────────────────────────────
+
+[WebApp]
+# TCP port for the built-in web application. Integer.
+# Env: MESHB_WEBAPP_PORT
+Port = 5000
+
+# Seconds between map marker redraws. Integer.
+# Env: MESHB_WEBAPP_REDRAW_MARKERS_EVERY
+RedrawMarkersEvery = 300
+
+# Google Maps JavaScript API key for the web UI map tiles.
+# Env: MESHB_WEBAPP_API_KEY
+APIKey = YOUR_GOOGLE_MAPS_API_KEY
+
+# Enable the built-in web application. Boolean.
+# Env: MESHB_WEBAPP_ENABLED
+Enabled = false
+
+# Map center latitude (typically your city). Float.
+# Env: MESHB_WEBAPP_CENTER_LATITUDE
+Center_Latitude = 50.5
+
+# Map center longitude (typically your city). Float.
+# Env: MESHB_WEBAPP_CENTER_LONGITUDE
+Center_Longitude = 30.5
+
+# Default tail duration in seconds — nodes older than this are hidden. Integer.
+# Env: MESHB_WEBAPP_LAST_HEARD_DEFAULT
+LastHeardDefault = 3600
+
+# Enable Ukraine-specific air raid alert features. Boolean.
+# Env: MESHB_WEBAPP_AIR_RAID_ENABLED
+AirRaidEnabled = false
+
+# Air raid private key (for notification service). String.
+# Env: MESHB_WEBAPP_AIR_RAID_PRIVATE
+AirRaidPrivate = YOUR_AIR_RAID_KEY
+
+# Public URL where the web app is accessible. String.
+# Env: MESHB_WEBAPP_EXTERNAL_URL
+ExternalURL = https://your-meshbridge.example.com/
+
+# URL shortener service: "pls" or "tly". Leave default unless you have API keys.
+# Env: MESHB_WEBAPP_SHORTENER_SERVICE
+ShortenerService = pls
+
+# TLY shortener API token.
+# Env: MESHB_WEBAPP_TLY_TOKEN
+TLYToken = YOUR_TLY_TOKEN
+
+# PLS shortener service token.
+# Env: MESHB_WEBAPP_PLSST
+PLSST = YOUR_PLSST_TOKEN
+
+
+# ─── Meshtastic Device ─────────────────────────────────────────────────────────
+
+[Meshtastic]
+# Admin node ID for the Meshtastic device (hex, prefixed with !). String.
+# Both public and private messages are supported.
+# Env: MESHB_MESHTASTIC_ADMIN
+Admin = !deadbeef
+
+# Device path. For serial use /dev/ttyACM0 (Linux) or /dev/ttyUSB0.
+# For TCP connections use tcp:hostname or tcp:IP (e.g. tcp:meshtastic.local).
+# For MQTT-only mode use "mqtt" (virtual node emulation).
+# Env: MESHB_MESHTASTIC_DEVICE
+Device = /dev/ttyACM0
+
+# SQLite database filename for storing node info and messages.
+# Env: MESHB_MESHTASTIC_DATABASE_FILE
+DatabaseFile = meshtastic.sqlite
+
+# FIFO pipe path for outgoing messages. String.
+# Env: MESHB_MESHTASTIC_FIFO_PATH
+FIFOPath = /tmp/mtg.fifo
+
+# FIFO pipe path for incoming commands. String.
+# Env: MESHB_MESHTASTIC_FIFO_CMD_PATH
+FIFOCmdPath = /tmp/mtg.cmd.fifo
+
+# Log node information to CSV. Boolean.
+# Env: MESHB_MESHTASTIC_NODE_LOG_ENABLED
+NodeLogEnabled = false
+
+# Path for node log CSV output.
+# Env: MESHB_MESHTASTIC_NODE_LOG_FILE
+NodeLogFile = /tmp/node_log.csv
+
+# Enable FIFO-based message routing. Boolean.
+# Env: MESHB_MESHTASTIC_FIFO_ENABLED
+FIFOEnabled = false
+
+# Welcome message sent to new nodes joining the mesh.
+# Env: MESHB_MESHTASTIC_WELCOME_MESSAGE
+WelcomeMessage = Welcome to our community
+
+# Enable the welcome message feature. Boolean.
+# Env: MESHB_MESHTASTIC_WELCOME_MESSAGE_ENABLED
+WelcomeMessageEnabled = false
+
+# Maximum hop count for message propagation. Integer.
+# Env: MESHB_MESHTASTIC_MAX_HOP_COUNT
+MaxHopCount = 5
+
+
+# ─── APRS (Amateur Packet Reporting System) ────────────────────────────────────
+
+[APRS]
+# Enable APRS-IS integration. Boolean.
+# Env: MESHB_APRS_ENABLED
+Enabled = false
+
+# Forward APRS node coordinates to Meshtastic. Boolean.
+# Env: MESHB_APRS_TO_MESHTASTIC
+ToMeshtastic = false
+
+# Forward Meshtastic node coordinates to APRS. Boolean.
+# Env: MESHB_APRS_FROM_MESHTASTIC
+FromMeshtastic = false
+
+# Valid APRS callsign (e.g. N0CALL-1). String.
+# Env: MESHB_APRS_CALL_SIGN
+CallSign = N0CALL-1
+
+# APRS-IS passcode (obtained from aprs-IS servers). String.
+# Env: MESHB_APRS_PASSWORD
+Password = 12345
+
+
+# ─── MQTT (Message Queuing Telemetry Transport) ────────────────────────────────
+
+[MQTT]
+# Enable MQTT connectivity for cross-network bridging. Boolean.
+# Env: MESHB_MQTT_ENABLED
+Enabled = false
+
+# MQTT topic root. String.
+# Env: MESHB_MQTT_TOPIC
+Topic = msh
+
+# Meshtastic channel name (must match device channel). String.
+# Env: MESHB_MQTT_CHANNEL
+Channel = LongFast
+
+# MQTT broker hostname. String.
+# Env: MESHB_MQTT_HOST
+Host = mqtt.eclipseprojects.io
+
+# MQTT broker port. Integer.
+# Env: MESHB_MQTT_PORT
+Port = 1883
+
+# MQTT authentication username. String.
+# Env: MESHB_MQTT_USER
+User = your_mqtt_username
+
+# MQTT authentication password. String.
+# Env: MESHB_MQTT_PASSWORD
+Password = your_mqtt_password

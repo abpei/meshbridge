@@ -11,10 +11,19 @@ data/
 # Environment (secrets)
 .env
 
+# Vendored upstream (fetched at build time)
+upstream/
+
 # Agent/tooling files
 AGENTS.md
 IMPLEMENTATION_PLAN.md
 *.plan.md
+
+# Test/temp files
+mock-meshtastic.py
+test_*.py
+.tmp-*.sh
+custom-upstream/
 
 # OS
 .DS_Store
@@ -31,3 +40,4 @@ Thumbs.db
 *.log
 *.out
 *.err
+mesh.ini
