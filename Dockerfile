@@ -20,7 +20,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY upstream/ ./upstream/
 COPY entrypoint.sh ./
 RUN chmod +x /app/entrypoint.sh
-COPY mock-meshtastic.py ./upstream/
 
 # Create non-root user and data directory
 RUN groupadd -r meshbridge && \
