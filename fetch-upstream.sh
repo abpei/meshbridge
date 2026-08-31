@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-UPSTREAM_URL="https://github.com/tb0hdan/meshtastic-telegram-gateway.git"
+UPSTREAM_URL="https://github.com/abpei/meshtastic-telegram-gateway.git"
 TARGET_DIR="${1:-./upstream}"
 
 if [ -d "$TARGET_DIR/.git" ]; then
