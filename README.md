@@ -16,6 +16,14 @@ cp .env.example .env
 docker compose up -d
 ```
 
+### Image tags
+
+Published images carry both a `latest` tag and a semver tag matching the release (e.g. `v0.0.2` and `0.0.2`), so you can pin to a specific version:
+
+```bash
+docker pull ghcr.io/abpei/meshbridge:v0.0.2
+```
+
 ## Architecture
 
 ```

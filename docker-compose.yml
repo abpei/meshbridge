@@ -9,6 +9,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # Tag the built image with the release version (vX.Y.Z and X.Y.Z)
+      # in addition to the `latest` tag from the `image:` field below.
+      tags:
+        - meshbridge:latest
+        - meshbridge:v0.0.2
+        - meshbridge:0.0.2
     image: meshbridge:latest
     container_name: meshbridge
     env_file: .env

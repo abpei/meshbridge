@@ -1,9 +1,13 @@
 FROM python:3.12-slim
 
+# MeshBridge release version (build-time arg; a plain `docker build` keeps this default).
+# Override with: docker build --build-arg VERSION=0.0.2 -t meshbridge:v0.0.2 .
+ARG VERSION=0.0.2
+
 # Labels for container metadata
 LABEL maintainer="meshbridge" \
       description="MeshBridge — Meshtastic ↔ Telegram gateway" \
-      version="0.1.0"
+      version="${VERSION}"
 
 # Install tini (PID 1 init) for signal handling
 RUN apt-get update && \
